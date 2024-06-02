@@ -21,5 +21,23 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+        trailingComma: "all",
+        arrowParens: "always",
+      },
+    ],
+    "comma-dangle": ["off", "always-multiline"],
+    "no-unused-vars": [
+      "error",
+      {
+        varsIgnorePattern: ".*",
+        args: "none",
+      },
+    ],
   },
 };

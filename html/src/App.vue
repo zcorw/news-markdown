@@ -1,34 +1,38 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref } from 'vue'
 import { ElInput, ElButton } from 'element-plus'
 import axios from 'axios'
-axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
-axios.defaults.headers.get["Cache-Control"] = "no-cache";
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+axios.defaults.headers.get['Cache-Control'] = 'no-cache'
 
 const text = ref('')
+const tags = ref('')
 const md = ref('')
 function submit() {
-  axios.post('api/cut', {
-    text: text.value
-  }).then(res => {
-    md.value = res.data
-  })
+  axios
+    .post('api/cut', {
+      text: text.value,
+      tags: tags.value
+    })
+    .then((res) => {
+      md.value = res.data
+    })
 }
 function copyText() {
   // 创建一个临时的文本框元素
-  var textarea = document.createElement("textarea");
+  var textarea = document.createElement('textarea')
   // 设置文本框的值为要复制的文本
-  textarea.value = md.value;
+  textarea.value = md.value
   // 将文本框元素添加到文档中
-  document.body.appendChild(textarea);
+  document.body.appendChild(textarea)
   // 选中文本
-  textarea.select();
+  textarea.select()
   // 执行复制命令
-  document.execCommand("copy");
+  document.execCommand('copy')
   // 移除文本框元素
-  document.body.removeChild(textarea);
+  document.body.removeChild(textarea)
   // 弹出提示
-  alert("文本已复制到剪贴板！");
+  alert('文本已复制到剪贴板！')
 }
 </script>
 
@@ -37,14 +41,31 @@ function copyText() {
     <div>
       <el-button type="primary" @click="submit">Submit</el-button>
     </div>
-    <el-input v-model="text" :row="8" type="textarea" style="flex: 1; margin-top: 10px" input-style="height: 100%" />
+    <div class="input-frame">
+      <el-input
+        v-model="text"
+        :row="8"
+        type="textarea"
+        style="flex: 1; margin-top: 10px"
+        input-style="height: 100%"
+      />
+      <el-input
+        v-model="tags"
+        :row="8"
+        type="textarea"
+        style="flex: 1; margin-top: 10px"
+        input-style="height: 100%"
+      />
+    </div>
   </header>
 
   <main>
     <div>
       <el-button type="primary" style="float: right" @click="copyText">Copy</el-button>
     </div>
-    <div style="margin-top: 10px;white-space: pre-line; flex: 1;min-height: 0;overflow: auto;">{{ md }}</div>
+    <div style="margin-top: 10px; white-space: pre-line; flex: 1; min-height: 0; overflow: auto">
+      {{ md }}
+    </div>
   </main>
 </template>
 
@@ -62,5 +83,12 @@ main {
   display: flex;
   flex-direction: column;
 }
-
+.input-frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.input-frame > div {
+  flex: 1;
+}
 </style>
