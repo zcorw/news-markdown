@@ -34,12 +34,30 @@ function copyText() {
   // 弹出提示
   alert('文本已复制到剪贴板！')
 }
+function newsImport() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  // 限制上传文件格式txt
+  input.accept = '.txt'
+  input.onchange = (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    const reader = new FileReader()
+    if (file) { 
+      reader.readAsText(file)
+      reader.onload = () => {
+        text.value = reader.result as string
+      }
+    }
+  }
+  input.click()
+}
 </script>
 
 <template>
   <header>
     <div>
       <el-button type="primary" @click="submit">Submit</el-button>
+      <el-button type="primary" @click="newsImport">Import</el-button>
     </div>
     <div class="input-frame">
       <el-input
