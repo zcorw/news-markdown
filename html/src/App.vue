@@ -1,22 +1,33 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElInput, ElButton } from 'element-plus'
-import axios from 'axios'
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
-axios.defaults.headers.get['Cache-Control'] = 'no-cache'
+import { ElInput, ElButton, ElMessage } from 'element-plus'
 
 const text = ref('')
 const tags = ref('')
 const md = ref('')
 function submit() {
-  axios
-    .post('api/cut', {
-      text: text.value,
-      tags: tags.value
-    })
-    .then((res) => {
-      md.value = res.data
-    })
+  let json: any = null;
+  try {
+    json = JSON.parse(tags.value) as { title: string; tags: string }[];
+  } catch (e) {
+    ElMessage.error('输入标签数据格式错误');
+    return;
+  }
+  if (!Array.isArray(json)) {
+    ElMessage.error('输入标签数据不是数组');
+    return;
+  }
+  const myRg = /•\s+([^：]+)：([^\n]+)\n*/g;
+  let mdText = '';
+  let oneNews: RegExpExecArray | null = null;
+  let i = 0;
+  while ((oneNews = myRg.exec(text.value))) {
+    const tag = json[i]?.tags;
+    mdText +=
+      (tag || '\n') + '\n' + '### ' + oneNews[1] + '\n' + oneNews[2] + '\n';
+    i++;
+  }
+  md.value = mdText
 }
 function copyText() {
   // 创建一个临时的文本框元素
